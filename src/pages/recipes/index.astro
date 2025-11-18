@@ -1,0 +1,49 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const recipes = await getCollection('recipes');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title="Recipes" description="Browse all recipes" />
+  </head>
+  <body>
+    <Header />
+
+    <main class="recipes-index">
+      <h1>Recipes</h1>
+      <p>Browse all the recipes in this collection.</p>
+
+      <ul class="recipe-list">
+        {recipes
+          .sort((a, b) => a.data.title.localeCompare(b.data.title))
+          .map((recipe) => (
+            <li class="recipe-card">
+              <a href={`/recipes/${recipe.slug}/`}>
+                {recipe.data.image && (
+                  <img
+                    src={recipe.data.image}
+                    alt={recipe.data.title}
+                    loading="lazy"
+                  />
+                )}
+                <h2>{recipe.data.title}</h2>
+                <p>{recipe.data.description}</p>
+                <p class="meta">
+                  {recipe.data.prepTime && <span>Prep: {recipe.data.prepTime}</span>}
+                  {recipe.data.cookTime && <span> • Cook: {recipe.data.cookTime}</span>}
+                </p>
+              </a>
+            </li>
+          ))}
+      </ul>
+    </main>
+
+    <Footer />
+  </body>
+</html>

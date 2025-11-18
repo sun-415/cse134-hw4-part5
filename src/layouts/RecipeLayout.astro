@@ -1,0 +1,71 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+
+// Frontmatter fields passed from each recipe markdown
+const {
+  title,
+  description,
+  image,
+  prepTime,
+  cookTime,
+  servings,
+  tags = [],
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <Header />
+
+    <main class="recipe-page">
+      <article class="recipe">
+        <header class="recipe-header">
+          <h1>{title}</h1>
+          {description && <p class="recipe-description">{description}</p>}
+
+          <dl class="recipe-meta">
+            {prepTime && (
+              <>
+                <dt>Prep</dt>
+                <dd>{prepTime}</dd>
+              </>
+            )}
+            {cookTime && (
+              <>
+                <dt>Cook</dt>
+                <dd>{cookTime}</dd>
+              </>
+            )}
+            {servings && (
+              <>
+                <dt>Serves</dt>
+                <dd>{servings}</dd>
+              </>
+            )}
+          </dl>
+
+          {tags.length > 0 && (
+            <ul class="recipe-tags">
+              {tags.map((tag) => <li>{tag}</li>)}
+            </ul>
+          )}
+
+          {image && (
+            <figure class="recipe-hero">
+              <img src={image} alt={title} loading="lazy" />
+            </figure>
+          )}
+        </header>
+
+        <section class="recipe-content">
+          <slot /> {/* markdown body goes here */}
+        </section>
+      </article>
+    </main>
+  </body>
+</html>
